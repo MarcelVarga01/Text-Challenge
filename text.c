@@ -20,8 +20,7 @@ text *newText(char *s) {
   char *c = malloc(INITIAL_CAPACITY * sizeof(char)); 
   int x = INITIAL_CAPACITY;  
   while(x < strlen(s) + 1)  x *= GROWTH_RATE;
-  
-  c = realloc(c, x);
+  if (x > INITIAL_CAPACITY) c = realloc(c, x);
   strcpy(c,s);
   *t = (text) {x, c};
   return t;
@@ -58,10 +57,12 @@ int compare(text *t1, text *t2) {
 }
 
 void append(text *t1, text *t2) {
-  int x = length(t1) + length(t2) + 1;
+  int len = length(t1) + length(t2);
   int cap = t1->capacity;
-  while(cap < x) cap *=GROWTH_RATE;
-  t1 = realloc(t1, cap);
+  while(cap < len + 1) cap *= GROWTH_RATE;
+  if(cap != t1->capacity) t1->content = realloc(t1->content, cap);
+  t1->capacity = cap;
+
   strcat(t1->content,t2->content);
 }
 
@@ -217,7 +218,7 @@ int main() {
     testSet();
     testCopy();
     testCompare();
-    //testAppend();
+    testAppend();
     //testSlice();
     //testFind();
     printf("Tests all pass.\n");
