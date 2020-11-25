@@ -19,10 +19,9 @@ text *newText(char *s) {
   text *t = malloc(sizeof(text));
   char *c = malloc(INITIAL_CAPACITY * sizeof(char)); 
   int x = INITIAL_CAPACITY;  
-  while(x < strlen(s) + 1) {
-    x *= GROWTH_RATE;
-    c = realloc(c, x*GROWTH_RATE);
-  }
+  while(x < strlen(s) + 1)  x *= GROWTH_RATE;
+  
+  c = realloc(c, x);
   strcpy(c,s);
   *t = (text) {x, c};
   return t;
@@ -36,25 +35,34 @@ void freeText(text *t) {
 }
 
 int length(text *t) {
-    return 0;
+  return strlen(t->content);
 }
 
 char get(text *t, int i) {
-    return '?';
+  assert(i <= length(t));
+  return t->content[i];
 }
 
 void set(text *t, int i, char c) {
+  assert(i <= length(t));
+  t->content[i] = c;
 }
 
 text *copy(text *t) {
-    return NULL;
+  text *cp = newText(t->content);
+  return cp;
 }
 
 int compare(text *t1, text *t2) {
-    return 0;
+  return strcmp(t1->content, t2->content);
 }
 
 void append(text *t1, text *t2) {
+  int x = length(t1) + length(t2) + 1;
+  int cap = t1->capacity;
+  while(cap < x) cap *=GROWTH_RATE;
+  t1 = realloc(t1, cap);
+  strcat(t1->content,t2->content);
 }
 
 text *slice(text *t, int i, int j) {
@@ -204,11 +212,11 @@ void testFind() {
 // Test the library.
 int main() {
     testNew();
-    //testLength();
-    //testGet();
-    //testSet();
-    //testCopy();
-    //testCompare();
+    testLength();
+    testGet();
+    testSet();
+    testCopy();
+    testCompare();
     //testAppend();
     //testSlice();
     //testFind();
