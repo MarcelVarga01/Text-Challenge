@@ -67,7 +67,12 @@ void append(text *t1, text *t2) {
 }
 
 text *slice(text *t, int i, int j) {
-    return NULL;
+  assert(i <= j);
+  char c[j - i + 1];
+  strncpy(c,t->content+i,j-i);
+  c[j - i] = '\0';
+  text *new = newText(c);
+  return new;
 }
 
 int find(text *t, text *p) {
@@ -219,7 +224,7 @@ int main() {
     testCopy();
     testCompare();
     testAppend();
-    //testSlice();
+    testSlice();
     //testFind();
     printf("Tests all pass.\n");
     return 0;
