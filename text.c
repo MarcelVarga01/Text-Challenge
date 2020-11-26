@@ -76,7 +76,9 @@ text *slice(text *t, int i, int j) {
 }
 
 int find(text *t, text *p) {
-    return 0;
+  char *c = strstr(t->content,p->content);
+  if(c == NULL) return -1;
+  return (c - t->content);
 }
 
 //-----------------------------------------------------------------------------
@@ -225,7 +227,7 @@ int main() {
     testCompare();
     testAppend();
     testSlice();
-    //testFind();
+    testFind();
     printf("Tests all pass.\n");
     return 0;
 }
